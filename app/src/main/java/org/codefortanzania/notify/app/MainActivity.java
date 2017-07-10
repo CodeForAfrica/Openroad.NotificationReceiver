@@ -5,18 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.HashMap;
+
+public class MainActivity extends AppCompatActivity{
     TableLayout tab;
+
+    private static final String SAVE_MESSAGE_URL = "http://192.168.0.53/ww-api/Api.php";
+
+    public static final String KEY_CATEGORY = "category";
+    public static final String KEY_TYPE = "type";
+    public static final String KEY_SENDER = "sender";
+    public static final String KEY_SENDER_TITLE = "sender_title";
+    public static final String KEY_BODY = "body";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,35 +55,62 @@ public class MainActivity extends AppCompatActivity {
             tr.addView(textview);
             tab.addView(tr);
 
-            // Try auto-reply.
-            if(sender.equals("\u202A+255 766 266 161\u202C")){
-                Log.i("Auto-Reply", "Yes");
-                /*
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "My text to send.");
-                sendIntent.setType("text/plain");
-                sendIntent.setPackage("com.whatsapp");
-                startActivity(sendIntent);
-                */
-
-                /*
-                Uri uri = Uri.parse("smsto:" + sender);
-                Intent i = new Intent(Intent.ACTION_SENDTO, uri);
-                i.putExtra("sms_body", "Umeipata hii meseji?");
-                i.setPackage("com.whatsapp");
-                startActivity(i);
-                */
-
-                Intent sendIntent = new Intent("android.intent.action.MAIN");
-                //sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.setType("text/plain");
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Did you receive this message?");
-                sendIntent.putExtra("jid", sender.replace("+","") + "@s.whatsapp.net"); //phone number without "+" prefix
-                sendIntent.setPackage("com.whatsapp");
-                startActivity(sendIntent);
-            }
+            // Sending to Database.
+            //saveMessage(sender,message);
         }
     };
+
+    private void saveMessage(final String sender, final String message){
+        /*
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SAVE_MESSAGE_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(MainActivity.this,response,Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this,error.toString(),Toast.LENGTH_LONG).show();
+                        VolleyLog.d("YOY", "Error: " + error.getMessage());
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                String sms_sender = sender.replaceAll("[ +]","");
+                String sms_sender_title = sender;
+                params.put(KEY_CATEGORY,"afya");
+                params.put(KEY_TYPE,"text");
+                params.put(KEY_SENDER, sms_sender);
+                params.put(KEY_SENDER_TITLE,sms_sender_title);
+                params.put(KEY_BODY,message);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        requestQueue.add(stringRequest);
+        */
+
+        /*
+        HashMap params = new HashMap();
+
+        String sms_sender = sender.replaceAll("[ +]","");
+        String sms_sender_title = sender;
+
+        params.put(KEY_CATEGORY,"afya");
+        params.put(KEY_TYPE,"text");
+        params.put(KEY_SENDER, sms_sender);
+        params.put(KEY_SENDER_TITLE,sms_sender_title);
+        params.put(KEY_BODY,message);
+
+        //You pass postData as the 2nd argument of the constructor
+        PostResponseAsyncTask saveMessageTask = new PostResponseAsyncTask(this, params);
+        saveMessageTask.execute(SAVE_MESSAGE_URL);
+
+        */
+    }
 }
