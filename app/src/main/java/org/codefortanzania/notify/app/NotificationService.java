@@ -44,7 +44,6 @@ public class NotificationService extends NotificationListenerService {
     public static final String KEY_CATEGORY = "category";
     public static final String KEY_TYPE = "type";
     public static final String KEY_SENDER = "sender";
-    public static final String KEY_SENDER_TITLE = "sender_title";
     public static final String KEY_BODY = "body";
     public static final String TAG = "Yousup API";
 
@@ -132,12 +131,10 @@ public class NotificationService extends NotificationListenerService {
         FormEncodingBuilder builder = new FormEncodingBuilder();
         sender = sender.replaceAll("\\u202A","");
         sender = sender.replaceAll("\\u202C","");
-        String sms_sender = sender.replaceAll("[ +]","");
         String sms_sender_title = sender;
         builder.add(KEY_CATEGORY,"afya");
         builder.add(KEY_TYPE,"text");
-        builder.add(KEY_SENDER, sms_sender);
-        builder.add(KEY_SENDER_TITLE,sms_sender_title);
+        builder.add(KEY_SENDER, sender);
         builder.add(KEY_BODY,message);
 
         formBody = builder.build();
