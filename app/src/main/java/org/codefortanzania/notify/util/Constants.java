@@ -6,7 +6,7 @@ package org.codefortanzania.notify.util;
 
 public class Constants {
     // TAG
-    public static final String TAG = "WhatsApp API";
+    public static final String TAG = "Openroad API";
 
     // API URL Calls.
     public static final String MESSAGE_POST_URL = "";
@@ -16,4 +16,5 @@ public class Constants {
     public static final String KEY_TYPE = "type";
     public static final String KEY_SENDER = "sender";
     public static final String KEY_BODY = "body";
+    public static final String KEY_API_KEY = "api_key";
 }

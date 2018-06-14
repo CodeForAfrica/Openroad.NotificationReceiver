@@ -3,6 +3,7 @@ package org.codefortanzania.notify.app;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -29,6 +30,10 @@ import java.util.HashMap;
 
 public class NotificationService extends NotificationListenerService {
     Context context;
+    SharedPreferences sharedpreferences;
+    public static final String MyPREFERENCES = "MyPrefs";
+    public static final String MessageURLKey = "messageURL";
+    public static final String ApiTokenKey = "apiToken";
 
     @Override
     public void onCreate() {
@@ -92,13 +97,16 @@ public class NotificationService extends NotificationListenerService {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Log.i(Constants.TAG, result); ;
-
+            Log.i(Constants.TAG, result);
         }
     }
 
     private String postToAPI(String sender, String message) {
         final MediaType text = MediaType.parse("text/x-markdown; charset=utf-8");
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        String messageURL = sharedpreferences.getString(MessageURLKey,"");
+        String apiToken = sharedpreferences.getString(ApiTokenKey,"");
 
         OkHttpClient client = new OkHttpClient();
         RequestBody formBody = null;
@@ -109,10 +117,11 @@ public class NotificationService extends NotificationListenerService {
         builder.add(Constants.KEY_TYPE,"text");
         builder.add(Constants.KEY_SENDER, sender);
         builder.add(Constants.KEY_BODY,message);
+        builder.add(Constants.KEY_API_KEY, apiToken);
 
         formBody = builder.build();
         Request request = new Request.Builder()
-                .url(Constants.MESSAGE_POST_URL)
+                .url(messageURL)
                 .post(formBody)
                 .build();
 

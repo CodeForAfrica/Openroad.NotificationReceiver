@@ -30,6 +30,9 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+        <activity
+            android:name=".SettingsActivity" >
+        </activity>
     </application>
 
 </manifest>
